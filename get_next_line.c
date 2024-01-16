@@ -6,83 +6,84 @@
 /*   By: julmorea <julmorea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 11:25:17 by julmorea          #+#    #+#             */
-/*   Updated: 2024/01/15 15:28:21 by julmorea         ###   ########.fr       */
+/*   Updated: 2024/01/16 12:22:44 by julmorea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*delete_last_line(char *line)
+char	*erase_old_line(char *line)
 {
-	int	i;
-	int	d;
-	char	*deletedbytes;
+	int		b;
+	int		i;
+	char	*buffer;
 
-	i = 0;
-	while (line[i] && line[i] != '\n')
-		i++;
-	if (!line[i])
+	b = 0;
+	while (line[b] && line[b] != '\n')
+		b++;
+	if (!line[b])
 	{
 		free(line);
 		return (NULL);
 	}
-	deletedbytes = malloc(sizeof(char) *(ft_strlen(line) - i + 1));
-	if (!deletedbytes)
+	buffer = malloc(sizeof(char) * ft_strlen(line) - b + 1);
+	if (!buffer)
 		return (NULL);
-	i++;
-	d = 0;
-	while (line[i])
-		deletedbytes[d++] = line[i++];
-	deletedbytes[d] = '\0';
+	b++;
+	i = 0;
+	while (line[b])
+		buffer[i++] = line[b++];
+	buffer[i] = '\0';
 	free(line);
-	return (deletedbytes);
+	return (buffer);
 }
 
-char	*write_file(char *line)
+char	*write_buffer(char *line)
 {
-	int		counter;
-	char	*newline;
-	
-	counter = 0;
-	if (!line[counter])
-		return(NULL);
-	while (line[counter] && line[counter] != '\n')
-		counter++;
-	newline = malloc(sizeof(char) + counter);
-	if (!newline)
-		return(NULL);
-	counter = 0;
-	while (line[counter] && line[counter] != '\n')
+	int		byte_count;
+	char	*new_line;
+
+	byte_count = 0;
+	if (!line[byte_count])
+		return (NULL);
+	while (line[byte_count] && line[byte_count] != '\n')
+		byte_count++;
+	new_line = malloc(sizeof(char) * byte_count + 2);
+	if (!new_line)
+		return (NULL);
+	byte_count = 0;
+	while (line[byte_count] && line[byte_count] != '\n')
 	{
-		newline[counter] = line[counter];
-		counter++;
+		new_line[byte_count] = line[byte_count];
+		byte_count++;
 	}
-	if (line[counter] == '\n')
+	if (line[byte_count] == '\n')
 	{
-		newline[counter] = line[counter];
-		counter++;
+		new_line[byte_count] = line[byte_count];
+		byte_count++;
 	}
-	newline[counter] = '\0';
-	return(newline);
+	new_line[byte_count] = '\0';
+	return (new_line);
 }
 
 char	*read_file(int fd, char *line)
 {
+	int		byte_count;
 	char	*buff;
-	int		bytes;
 
 	buff = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buff)
 		return (NULL);
-	while (!ft_strchr(line, '\n') && bytes != 0)
+	byte_count = 1;
+	while (!ft_strchr(line, '\n') && byte_count != 0)
 	{
-		bytes = read(fd, buff, BUFFER_SIZE);
-		if (bytes == -1)
+		byte_count = read(fd, buff, BUFFER_SIZE);
+		if (byte_count == -1)
 		{
 			free(buff);
-			return(NULL);
+			return (NULL);
 		}
-		buff[bytes] = '\0';
+		buff[byte_count] = '\0';
 		line = ft_strjoin(line, buff);
 	}
 	free(buff);
@@ -91,19 +92,20 @@ char	*read_file(int fd, char *line)
 
 char	*get_next_line(int fd)
 {
-	static char *line;
-	char *read_write;
-	
+	static char	*line;
+	char		*buff;
+
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	line = read_file(fd, line);
 	if (!line)
 		return (NULL);
-	read_write = write_file(line);
-	line = delete_last_line(line);
-	return (read_write);
+	buff = write_buffer(line);
+	line = erase_old_line(line);
+	return (buff);
 }
-// int main ()
+
+// int	main(void)
 // {
 // 	int fd = open("txt.txt", BUFFER_SIZE, O_RDONLY);
 // 	char *buff = get_next_line(fd);

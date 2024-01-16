@@ -6,7 +6,7 @@
 /*   By: julmorea <julmorea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 14:34:57 by julmorea          #+#    #+#             */
-/*   Updated: 2024/01/15 15:28:30 by julmorea         ###   ########.fr       */
+/*   Updated: 2024/01/16 12:13:59 by julmorea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ size_t	ft_strlen(const char *s)
 		i++;
 	return (i);
 }
+
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstlen)
 {
 	size_t	i;
