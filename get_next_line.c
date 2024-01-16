@@ -104,14 +104,3 @@ char	*get_next_line(int fd)
 	line = erase_old_line(line);
 	return (buff);
 }
-
-// int	main(void)
-// {
-// 	int fd = open("txt.txt", BUFFER_SIZE, O_RDONLY);
-// 	char *buff = get_next_line(fd);
-// 	printf("%s", buff);
-// 	buff = get_next_line(fd);
-// 	printf("%s", buff);
-// 	buff = get_next_line(fd);
-// 	printf("%s", buff);
-// }
